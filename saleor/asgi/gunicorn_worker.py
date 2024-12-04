@@ -1,3 +1,4 @@
+import os
 from uvicorn.workers import UvicornWorker as BaseUvicornWorker
 
 
@@ -8,4 +9,5 @@ class UvicornWorker(BaseUvicornWorker):
         "http": "httptools",
         "lifespan": "off",
         "ws": "none",
+        "root_path": os.environ.get("SALEOR_ROOT_PATH", "/"),
     }

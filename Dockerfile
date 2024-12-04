@@ -44,6 +44,9 @@ COPY --from=build-python /usr/local/bin/ /usr/local/bin/
 COPY . /app
 WORKDIR /app
 
+ARG SALEOR_ROOT_PATH
+ENV SALEOR_ROOT_PATH=${SALEOR_ROOT_PATH:-/}
+
 ARG STATIC_URL
 ENV STATIC_URL=${STATIC_URL:-/static/}
 RUN SECRET_KEY=dummy STATIC_URL=${STATIC_URL} python3 manage.py collectstatic --no-input
