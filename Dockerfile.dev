@@ -1,5 +1,11 @@
+FROM python:3.12 as base
+
+# Required RooCA certificate in root directory!
+COPY ./rootCA.pem /usr/local/share/ca-certificates/mkcert-rootCA.crt 
+RUN update-ca-certificates
+
 ### Build and install packages
-FROM python:3.12 AS build-python
+FROM base AS build-python
 
 RUN apt-get -y update \
   && apt-get install -y gettext \
@@ -15,7 +21,9 @@ COPY poetry.lock pyproject.toml /app/
 RUN --mount=type=cache,mode=0755,target=/root/.cache/pypoetry poetry install
 
 ### Final image
-FROM python:3.12-slim
+FROM base
+
+ENV REQUESTS_CA_BUNDLE=/usr/local/share/ca-certificates/mkcert-rootCA.crt
 
 RUN groupadd -r saleor && useradd -r -g saleor saleor
 
